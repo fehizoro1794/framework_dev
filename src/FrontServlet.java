@@ -49,9 +49,7 @@ public class FrontServlet extends HttpServlet {
         try {
             
             HashMap<String ,String> urlDatas=getURLDatas(request, response);
-            // if (urlDatas.get("class")) {
-                
-            // }
+            
             out.println("Url complet: "+urlDatas.get("url_with_dns"));
             out.println("url sans DNS/sans IP: "+urlDatas.get("url"));
             out.println("Context: "+urlDatas.get("contextPath"));
