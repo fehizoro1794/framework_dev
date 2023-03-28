@@ -4,19 +4,19 @@
  */
 package model;
 
-import etu1794.framework.AnnotedClass;
+import etu1794.framework.Annoted;
 
 /**
  *
  * @author ITU
  */
 public class Departement {
-    @AnnotedClass(methodName = "attribut_id")
+    @Annoted(methodName = "attribut_id")
        int id;
     
     String nom;
     
-    @AnnotedClass(methodName = "dept_func")
+    @Annoted(methodName = "dept_func")
     public void func_dept(){
         System.out.println("function");
     }

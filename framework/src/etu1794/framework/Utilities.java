@@ -78,7 +78,7 @@ public class Utilities {
                 for (Method method : methods) {
                     Annotation annotation = method.getAnnotation(annotationClass);
                     if (annotation != null) {
-                        annotatedMethods.put(((AnnotedClass) annotation).methodName(), new Mapping( cls.getName(), method.getName()));
+                        annotatedMethods.put(((Annoted) annotation).methodName(), new Mapping( cls.getName(), method.getName()));
                     }
                 }
             }

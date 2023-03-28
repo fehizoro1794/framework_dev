@@ -4,7 +4,7 @@
  */
 package etu1794.framework.servlet;
 
-import etu1794.framework.AnnotedClass;
+import etu1794.framework.Annoted;
 import etu1794.framework.Mapping;
 import etu1794.framework.Utilities;
 import java.io.IOException;
@@ -69,7 +69,7 @@ public class FrontServlet extends HttpServlet {
     {
         this.setPackageName(this.getInitParameter("toScan")); 
         try {
-            this.setMappingUrls(Utilities.getAnnotatedMethods(this.getPackageName(), AnnotedClass.class));
+            this.setMappingUrls(Utilities.getAnnotatedMethods(this.getPackageName(), Annoted.class));
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(FrontServlet.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {

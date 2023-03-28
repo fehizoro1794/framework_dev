@@ -4,7 +4,7 @@
  */
 package model;
 
-import etu1794.framework.AnnotedClass;
+import etu1794.framework.Annoted;
 
 /**
  *
@@ -14,7 +14,7 @@ public class Employe {
     int id;
     String nom;
     
-    @AnnotedClass(methodName = "say_emp")
+    @Annoted(methodName = "say_emp")
     public void sayEmploye(){
         System.out.println("employe");
     }
@@ -24,7 +24,7 @@ public class Employe {
         System.out.println("dept");
     }
     
-     @AnnotedClass(methodName = "say_something")
+     @Annoted(methodName = "say_something")
     public void printSomething(String smt){
         System.out.println(smt);
     }
