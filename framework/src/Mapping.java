@@ -6,10 +6,10 @@ package etu1794.framework;
 
 /**
  *
- * @author ITU
+ * @author rango
  */
 public class Mapping {
-        private String className;
+    private String className;
     private String method;
 
     public Mapping(String className, String method) {
@@ -36,6 +36,7 @@ public class Mapping {
     public void setMethod(String method) {
         this.method = method;
     }
+    
     
     
 }
