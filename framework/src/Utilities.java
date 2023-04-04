@@ -1,6 +1,7 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
 package etu1794.framework;
 
@@ -17,16 +18,18 @@ import java.util.List;
 
 /**
  *
- * @author ITU
+ * @author rango
  */
 public class Utilities {
     
-    public static List<Class<?>> getClasses2(String scannedPackage) throws Exception {
+    public static List<Class<?>> getClasses(String scannedPackage) throws Exception {
         
         try {
             ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
             String path = scannedPackage.replace('.', '/');
+            System.out.println(path);
             Enumeration<URL> resources = classLoader.getResources(path);
+            System.out.println(resources);
             List<File> dirs = new ArrayList<>();
             while (resources.hasMoreElements()) {
                 URL resource = resources.nextElement();
@@ -44,10 +47,15 @@ public class Utilities {
         
     }
 
-    private static List<Class<?>> findClasses(File directory, String packageName) throws Exception {
+    private static List<Class<?>> findClasses(File dirFile, String packageName) throws Exception {
         List<Class<?>> classes = new ArrayList<>();
+        String dir = dirFile.getPath().replace("%20", " ");
+        File directory = new File(dir);
+        System.out.println("directory :" + directory);
+        
         try {
             if (!directory.exists()) {
+                System.out.println("directory not found");
                 return classes;
             }
             File[] files = directory.listFiles();
@@ -60,25 +68,24 @@ public class Utilities {
                     classes.add(Class.forName(className));
                 }
             }
+            System.out.println("classes :" + classes);
             return classes;
         } catch (Exception e) {
             e.printStackTrace();
             throw new Exception("Error on getting classes in a specific directory");
         }
-        
-        
     }
     
     public static HashMap<String,Mapping> getAnnotatedMethods(String packageName, Class<? extends Annotation> annotationClass) throws Exception {
         try {
-            List<Class<?>> classes = getClasses2(packageName);
+            List<Class<?>> classes = getClasses(packageName);
             HashMap<String,Mapping> annotatedMethods = new HashMap<String,Mapping>();
             for (Class<?> cls : classes) {
                 Method[] methods = cls.getDeclaredMethods();
                 for (Method method : methods) {
                     Annotation annotation = method.getAnnotation(annotationClass);
                     if (annotation != null) {
-                        annotatedMethods.put(((Annoted) annotation).methodName(), new Mapping( cls.getName(), method.getName()));
+                        annotatedMethods.put(((AnnotedClass) annotation).methodName(), new Mapping( cls.getName(), method.getName()));
                     }
                 }
             }

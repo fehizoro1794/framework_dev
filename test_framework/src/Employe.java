@@ -4,28 +4,43 @@
  */
 package model;
 
-import etu1794.framework.Annoted;
+import etu1794.framework.AnnotedClass;
+import etu1794.framework.ModelView;
 
 /**
  *
- * @author ITU
+ * @author rango;
  */
 public class Employe {
-    int id;
-    String nom;
-    
-    @Annoted(methodName = "say_emp")
-    public void sayEmploye(){
-        System.out.println("employe");
-    }
-    
+    private String idEmploye;
+    private String nameEmploye;
 
-    public void sayDept(){
-        System.out.println("dept");
+    // Usefull function
+    @AnnotedClass(methodName = "test")
+    public ModelView loadViewTest(){
+        ModelView result = new ModelView("test.jsp");
+        return result;
     }
-    
-     @Annoted(methodName = "say_something")
-    public void printSomething(String smt){
-        System.out.println(smt);
+
+    @AnnotedClass(methodName = "test2")
+    public ModelView loadViewTest2(){
+        ModelView result = new ModelView("test2.jsp");
+        return result;
+    }
+
+    public String getIdEmploye() {
+        return idEmploye;
+    }
+
+    public void setIdEmploye(String idEmploye) {
+        this.idEmploye = idEmploye;
+    }
+
+    public String getNameEmploye() {
+        return nameEmploye;
+    }
+
+    public void setNameEmploye(String nameEmploye) {
+        this.nameEmploye = nameEmploye;
     }
 }

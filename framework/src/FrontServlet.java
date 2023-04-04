@@ -1,20 +1,15 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 package etu1794.framework.servlet;
 
-import etu1794.framework.Annoted;
+import etu1794.framework.AnnotedClass;
 import etu1794.framework.Mapping;
+import etu1794.framework.ModelView;
 import etu1794.framework.Utilities;
 import java.io.IOException;
 import java.io.PrintWriter;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.*;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -22,46 +17,48 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author ITU
+ * @author rango
  */
 public class FrontServlet extends HttpServlet {
     HashMap<String, Mapping> mappingUrls;
     String packageName;
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet FrontServlet</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet FrontServlet at " + request.getContextPath() + "</h1>");
+        try{
+            PrintWriter out = response.getWriter();
+            String path = (String) request.getServletPath();
+            String[] split = path.split("/"); 
 
-            
-            for (Map.Entry<String, Mapping> entry : mappingUrls.entrySet()) {
-                String key = entry.getKey();
-                Mapping value = entry.getValue();
-                out.print("<p>");
-                out.println("annotation = " + key + " / ");
-                out.println("class Name = " + value.getClassName() + " / ");
-                out.println("fonction Name = " + value.getMethod() + " / ");
-                out.println("</p>");
+            if(this.getMappingUrls().containsKey(split[1]) == true){
+                out.print("Yesss");
+                String className = this.getMappingUrls().get(split[1]).getClassName();          // Get the name of the class
+                String methode = this.getMappingUrls().get(split[1]).getMethod();               // Get the method
+                Class<?> classType = Class.forName(className);                                  // Recast the name => Classe
+                Object temp = classType.getDeclaredConstructor().newInstance();                 // INstantiate the object
+                ModelView mv = (ModelView) classType.getDeclaredMethod(methode).invoke(temp);   // Get the modelView
+                String view = mv.getVue();                                                      // Get the jsp page
+                
+                RequestDispatcher dispat = request.getRequestDispatcher(view);
+                dispat.forward(request, response);
+            } else{
+                RequestDispatcher dispat = request.getRequestDispatcher("/");
+                dispat.forward(request, response);
             }
-            
-            out.println("</body>");
-            out.println("</html>");
+       
+            // for (Map.Entry<String, Mapping> entry : mappingUrls.entrySet()) {
+            //     String key = entry.getKey();
+            //     Mapping value = entry.getValue();
+            //     out.print("<p>");
+            //     out.println("annotation = " + key + " / ");
+            //     out.println("class Name = " + value.getClassName() + " / ");
+            //     out.println("fonction Name = " + value.getMethod() + " / ");
+            //     out.println("</p>");
+            // }
+
+        } catch(Exception e) {
+            e.printStackTrace();
         }
     }
     
@@ -69,7 +66,7 @@ public class FrontServlet extends HttpServlet {
     {
         this.setPackageName(this.getInitParameter("toScan")); 
         try {
-            this.setMappingUrls(Utilities.getAnnotatedMethods(this.getPackageName(), Annoted.class));
+            this.setMappingUrls(Utilities.getAnnotatedMethods(this.getPackageName(), AnnotedClass.class));
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(FrontServlet.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -134,5 +131,6 @@ public class FrontServlet extends HttpServlet {
         this.packageName = packageName;
     }
 
+    
     
 }
