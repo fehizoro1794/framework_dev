@@ -15,7 +15,43 @@ public class Employe {
     private String idEmploye;
     private String nameEmploye;
 
+    public Employe(){
+        this.idEmploye="1";
+        this.nameEmploye="nom_de_test";
+    }
+
+    @AnnotedClass(methodName = "components")
+    public ModelView getEverything(){
+        ModelView modelView = new ModelView("components.jsp");
+        modelView.addIdem("idEmploye", this.idEmploye);
+        modelView.addIdem("nameEmploye", this.nameEmploye);
+        modelView.addIdem("getAll", this.getAll());
+
+        return modelView;
+    }
+    
+    @Override
+    public String toString() {
+        return "Employe [idEmploye=" + idEmploye + ", nameEmploye=" + nameEmploye + "]";
+    }
+
     // Usefull function
+    public Employe[] getAll() {
+        Employe[] listEmp = new Employe[3];
+        listEmp[0] = new Employe();
+        listEmp[0].setIdEmploye("1");
+        listEmp[0].setNameEmploye("Jean");
+
+        listEmp[1] = new Employe();
+        listEmp[1].setIdEmploye("2");
+        listEmp[1].setNameEmploye("Jacque");
+
+        listEmp[2] = new Employe();
+        listEmp[2].setIdEmploye("3");
+        listEmp[2].setNameEmploye("Jacob");
+
+        return listEmp;
+    }
     @AnnotedClass(methodName = "test")
     public ModelView loadViewTest(){
         ModelView result = new ModelView("test.jsp");

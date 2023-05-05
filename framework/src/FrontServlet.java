@@ -22,14 +22,32 @@ import java.util.logging.Logger;
 public class FrontServlet extends HttpServlet {
     HashMap<String, Mapping> mappingUrls;
     String packageName;
-
+    
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        PrintWriter out = response.getWriter();
         try{
-            PrintWriter out = response.getWriter();
+            
             String path = (String) request.getServletPath();
             String[] split = path.split("/"); 
+
+            //envoyer les données d'une vue dans FrontServlet
+            Map<String, String[]> donneesJSP;
+            if (request.getParameterMap()!=null && !request.getParameterMap().isEmpty()) {
+                donneesJSP = request.getParameterMap();
+
+                out.println(donneesJSP.toString());
+                for (String parameterName : donneesJSP.keySet()) {
+                    String[] values = donneesJSP.get(parameterName);
+                    out.println(parameterName + " : " + String.join(", ", values));
+                    /*ne surtout pas oublier le [0] de donneesJSP.get(parameterName)[0]*/
+                    request.setAttribute(parameterName,donneesJSP.get(parameterName)[0]);
+                    // request.setAttribute("get_"+parameterName,donneesJSP.get(parameterName)[0]);
+                    //faire get_+nom du parametre pour recuperer les donnees
+                }
+                out.println("----->"+donneesJSP.get("nom")[0]);   
+            }
 
             if(this.getMappingUrls().containsKey(split[1]) == true){
                 out.print("Yesss");
@@ -40,13 +58,19 @@ public class FrontServlet extends HttpServlet {
                 ModelView mv = (ModelView) classType.getDeclaredMethod(methode).invoke(temp);   // Get the modelView
                 String view = mv.getVue();                                                      // Get the jsp page
                 
+                out.println("contenues de getData: " + mv.getData().toString() +"\n");
+                out.println("type de getData(): " + mv.getData().getClass().getName() + "\n");
+                
+                request.setAttribute("class_components",mv.getData());
+
                 RequestDispatcher dispat = request.getRequestDispatcher(view);
                 dispat.forward(request, response);
             } else{
-                RequestDispatcher dispat = request.getRequestDispatcher("/");
-                dispat.forward(request, response);
+                // RequestDispatcher dispat = request.getRequestDispatcher("/");
+                // dispat.forward(request, response);
+                out.println(this.getMappingUrls().toString());
             }
-       
+
             // for (Map.Entry<String, Mapping> entry : mappingUrls.entrySet()) {
             //     String key = entry.getKey();
             //     Mapping value = entry.getValue();
@@ -58,10 +82,12 @@ public class FrontServlet extends HttpServlet {
             // }
 
         } catch(Exception e) {
+            out.println(e.getMessage()+"\n");
+            out.println("cause :" + e.getCause().toString()+"\n");
+            // out.println(e.getLocalizedMessage());
             e.printStackTrace();
         }
     }
-    
     public void init() throws ServletException 
     {
         this.setPackageName(this.getInitParameter("toScan")); 
