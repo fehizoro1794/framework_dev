@@ -14,7 +14,12 @@ import etu1794.framework.ModelView;
 public class LoadView {
     public LoadView(){
     }
-    
+    @AnnotedClass(methodName = "upload_view")
+    public ModelView loadUploadView_datas(){
+        ModelView result = new ModelView("upload_file.jsp");
+        return result;
+    }
+
     @AnnotedClass(methodName = "formulaire")
     public ModelView loadViewFormulaire(){
         ModelView result = new ModelView("formulaire.jsp");
